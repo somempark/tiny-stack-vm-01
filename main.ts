@@ -132,7 +132,8 @@ function run(p, q) {
 const I = process.env.MAKEFUN_INPUT_DIR ?? '/input';
 const O = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 for (const id of readdirSync(I).sort()) {
-  const r = run(new Uint8Array(readFileSync(join(I, id, 'program.bin'))), new Uint8Array(readFileSync(join(I, id, 'input.bin'))));
+  // readFileSync already returns a Buffer, which is a Uint8Array: no copy needed.
+  const r = run(readFileSync(join(I, id, 'program.bin')), readFileSync(join(I, id, 'input.bin')));
   mkdirSync(join(O, id), { recursive: true });
   writeFileSync(join(O, id, 'stdout.bin'), r.o);
   writeFileSync(join(O, id, 'exit.txt'), r.c + '\n');
